@@ -1,0 +1,37 @@
+import json
+import boto3
+from time import gmtime, strftime
+
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table('BinaryCalculator')
+now = strftime("%a, %d %b %Y %H:%M:%S +0000", gmtime())
+
+def lambda_handler(event, context):
+    userInputNum = str(event['userInputNum'])
+    userInputBase = int(event['userInputBase'])
+    result = ''
+
+    decimalConversion = 0
+    userInputNum = userInputNum[::-1] 
+    
+    for i, digit in enumerate(userInputNum):
+        decimalConversion += int(digit) * (2 ** i)
+
+    result = ''
+    while decimalConversion > 0:
+        remainder = decimalConversion % userInputBase
+        result = str(remainder) + result
+        decimalConversion //= userInputBase
+
+    response = table.put_item(
+        Item={
+            'ID': result,
+            'LatestGreetingTime':now
+            })
+
+    return {
+    'statusCode': 200,
+    'body': json.dumps('Your result is ' + result)
+    }
+
+
