@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Binary Instruction Translator</title>
+    <!-- Styling for the client UI -->
+    <style>
+      h1,
+      h3 {
+        color: #ffffff;
+        font-family: system-ui;
+        margin-left: 20px;
+      }
+      body {
+        background-color: #374652;
+      }
+      label {
+        color: #cfdde9;
+        font-family: system-ui;
+        font-size: 20px;
+        margin-left: 20px;
+        margin-top: 20px;
+      }
+      button {
+        background-color: #32a5c2;
+        border-color: rgb(50, 96, 194);
+        color: #ffffff;
+        font-family: system-ui;
+        font-size: 20px;
+        font-weight: bold;
+        margin-left: 30px;
+        margin-top: 20px;
+        width: 140px;
+      }
+      input {
+        color: #222629;
+        font-family: system-ui;
+        font-size: 20px;
+        margin-left: 10px;
+        margin-top: 20px;
+        width: 100px;
+      }
+    </style>
+    <script>
+      var callAPI = (userInputNum, userInputBase) => {
+        console.log(userInputBase);
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        var raw = JSON.stringify({
+          userInputNum: userInputNum,
+          userInputBase: userInputBase,
+        });
+        var requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+          redirect: "follow",
+        };
+        fetch("{YOUR-API-GATEWAY-URL}", requestOptions)
+          .then((response) => response.text())
+          .then((result) => alert(JSON.parse(result).body))
+          .catch((error) => console.log("error", error));
+      };
+    </script>
+  </head>
+  <body>
+    <h1>Binary Instruction Translator</h1>
+    <h3>
+      Look no further in understanding machine code! Enter a binary integer
+      (0-127) and I will return the converted number given the base!
+    </h3>
+    <form>
+      <label>Binary Instruction:</label>
+      <input type="text" id="userInputNum" />
+      <label> Base:</label>
+      <input type="text" id="userInputBase" />
+      <button
+        type="button"
+        onclick="callAPI(document.getElementById('userInputNum').value,document.getElementById('userInputBase').value)"
+      >
+        CALCULATE
+      </button>
+    </form>
+  </body>
+</html>
